@@ -242,6 +242,7 @@ func (m *{{ .ShortName }}) Deserialize(buf *bytes.Reader) error {
 var srvTemplate = `
 // Automatically generated from the message definition "{{ .FullName }}.srv"
 package {{ .Package }}
+
 import (
     "github.com/ClarkGuan/rosgo/ros"
 )
