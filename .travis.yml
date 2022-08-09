@@ -19,8 +19,8 @@ services:
     - docker
 
 install:
-    - docker build -f .travis/Dockerfile -t akio/rosgo . --build-arg ROS_DOCKER_TAG=$ROS_DOCKER
+    - docker build -f .travis/Dockerfile -t ClarkGuan/rosgo . --build-arg ROS_DOCKER_TAG=$ROS_DOCKER
 
 script:
-    - docker run -v $GOROOT:/usr/local/go akio/rosgo
+    - docker run -v $GOROOT:/usr/local/go ClarkGuan/rosgo
 

@@ -6,14 +6,14 @@ import (
 
 type Node interface {
 	NewPublisher(topic string, msgType MessageType) Publisher
-	// Create a publisher which gives you callbacks when subscribers
+	// NewPublisherWithCallbacks Create a publisher which gives you callbacks when subscribers
 	// connect and disconnect.  The callbacks are called in their own
 	// goroutines, so they don't need to return immediately to let the
 	// connection proceed.
 	NewPublisherWithCallbacks(topic string,
 		msgType MessageType,
 		connectCallback, disconnectCallback func(SingleSubscriberPublisher)) Publisher
-	// callback should be a function which takes 0, 1, or 2 arguments.
+	// NewSubscriber callback should be a function which takes 0, 1, or 2 arguments.
 	// If it takes 0 arguments, it will simply be called without the
 	// message.  1-argument functions are the normal case, and the
 	// argument should be of the generated message type.  If the
@@ -49,7 +49,7 @@ type Publisher interface {
 	Shutdown()
 }
 
-// A publisher which only sends to one specific subscriber.  This is
+// SingleSubscriberPublisher A publisher which only sends to one specific subscriber.  This is
 // sent as an argument to the connect and disconnect callback
 // functions passed to Node.NewPublisherWithCallbacks().
 type SingleSubscriberPublisher interface {
@@ -63,7 +63,7 @@ type Subscriber interface {
 	Shutdown()
 }
 
-// Optional second argument to a Subscriber callback.
+// MessageEvent Optional second argument to a Subscriber callback.
 type MessageEvent struct {
 	PublisherName    string
 	ReceiptTime      time.Time

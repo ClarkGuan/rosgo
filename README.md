@@ -10,7 +10,7 @@ Package Summary
 
 - Author: Akio Ochiai
 - License: Apache License 2.0
-- Source: git [https://github.com/akio/rosgo](https://github.com/akio/rosgo)
+- Source: git [https://github.com/ClarkGuan/rosgo](https://github.com/ClarkGuan/rosgo)
 
 Status
 ---------------------------------

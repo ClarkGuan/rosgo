@@ -8,12 +8,13 @@ import (
 var msgTemplate = `
 // Automatically generated from the message definition "{{ .FullName }}.msg"
 package {{ .Package }}
+
 import (
     "bytes"
 {{- if .BinaryRequired }}
     "encoding/binary"
 {{- end }}
-    "github.com/akio/rosgo/ros"
+    "github.com/ClarkGuan/rosgo/ros"
 {{- range .Imports }}
 	"{{ . }}"
 {{- end }}
@@ -30,7 +31,6 @@ const (
 {{- end }}
 )
 {{- end }}
-
 
 type _Msg{{ .ShortName }} struct {
     text string
@@ -123,8 +123,8 @@ func (m *{{ .ShortName }}) Serialize(buf *bytes.Buffer) error {
 {{-     else }}
 {{-         if .IsBuiltin }}
 {{-             if eq .Type "string" }}
-    binary.Write(buf, binary.LittleEndian, uint32(len([]byte(m.{{ .GoName }}))))
-    buf.Write([]byte(m.{{ .GoName }}))
+    binary.Write(buf, binary.LittleEndian, uint32(len(m.{{ .GoName }})))
+    buf.WriteString(m.{{ .GoName }})
 {{-             else }}
 {{-                 if or (eq .Type "time") (eq .Type "duration") }}
     binary.Write(buf, binary.LittleEndian, m.{{ .GoName }}.Sec)
@@ -142,7 +142,6 @@ func (m *{{ .ShortName }}) Serialize(buf *bytes.Buffer) error {
 {{- end }}
     return err
 }
-
 
 func (m *{{ .ShortName }}) Deserialize(buf *bytes.Reader) error {
     var err error = nil
@@ -243,7 +242,7 @@ var srvTemplate = `
 // Automatically generated from the message definition "{{ .FullName }}.srv"
 package {{ .Package }}
 import (
-    "github.com/akio/rosgo/ros"
+    "github.com/ClarkGuan/rosgo/ros"
 )
 
 // Service type metadata

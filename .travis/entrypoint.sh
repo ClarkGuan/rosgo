@@ -4,9 +4,9 @@ export PATH=$PWD/bin:/usr/local/go/bin:$PATH
 export GOPATH=$PWD:/usr/local/go
 
 roscore &
-go install github.com/akio/rosgo/gengo
-go generate github.com/akio/rosgo/test/test_message
-go test github.com/akio/rosgo/xmlrpc
-go test github.com/akio/rosgo/ros
-go test github.com/akio/rosgo/test/test_message
+go install github.com/ClarkGuan/rosgo/gengo
+go generate github.com/ClarkGuan/rosgo/test/test_message
+go test github.com/ClarkGuan/rosgo/xmlrpc
+go test github.com/ClarkGuan/rosgo/ros
+go test github.com/ClarkGuan/rosgo/test/test_message
 
