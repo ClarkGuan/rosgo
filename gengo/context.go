@@ -6,6 +6,7 @@ import (
 	"encoding/hex"
 	"fmt"
 	"io/ioutil"
+	"os"
 	"path/filepath"
 	"strings"
 )
@@ -91,6 +92,11 @@ type MsgContext struct {
 	msgRegistry map[string]*MsgSpec
 }
 
+func NewMsgContextFromEnv() (*MsgContext, error) {
+	rosPkgPath := os.Getenv("ROS_PACKAGE_PATH")
+	return NewMsgContext(strings.Split(rosPkgPath, ":"))
+}
+
 func NewMsgContext(rosPkgPaths []string) (*MsgContext, error) {
 	ctx := new(MsgContext)
 	msgs, err := findAllMessages(rosPkgPaths)
@@ -104,6 +110,7 @@ func NewMsgContext(rosPkgPaths []string) (*MsgContext, error) {
 		return nil, err
 	}
 	ctx.srvPathMap = srvs
+
 	ctx.msgRegistry = make(map[string]*MsgSpec)
 	return ctx, nil
 }

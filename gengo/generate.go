@@ -14,10 +14,11 @@ import (
 {{- if .BinaryRequired }}
     "encoding/binary"
 {{- end }}
-    "github.com/ClarkGuan/rosgo/ros"
 {{- range .Imports }}
 	"{{ . }}"
 {{- end }}
+
+	"github.com/ClarkGuan/rosgo/ros"
 )
 
 {{- if gt (len .Constants) 0 }}
@@ -104,8 +105,8 @@ func (m *{{ .ShortName }}) Serialize(buf *bytes.Buffer) error {
     for _, e := range m.{{ .GoName }} {
 {{-         if .IsBuiltin }}
 {{-             if eq .Type "string" }}
-        binary.Write(buf, binary.LittleEndian, uint32(len([]byte(e))))
-        buf.Write([]byte(e))
+        binary.Write(buf, binary.LittleEndian, uint32(len(e)))
+        buf.WriteString(e)
 {{-            else }}
 {{-                if or (eq .Type "time") (eq .Type "duration") }}
         binary.Write(buf, binary.LittleEndian, e.Sec)

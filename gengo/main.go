@@ -36,9 +36,7 @@ func main() {
 		os.Exit(-1)
 	}
 
-	rosPkgPath := os.Getenv("ROS_PACKAGE_PATH")
-
-	context, err := NewMsgContext(strings.Split(rosPkgPath, ":"))
+	context, err := NewMsgContextFromEnv()
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(-1)
