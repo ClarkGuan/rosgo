@@ -31,7 +31,7 @@ var PrimitiveTypes = []string{
 
 var BuiltinTypes = append([]string{TimeType, DurationType}, PrimitiveTypes...)
 
-var ResourceNameLegalCharsPattern = regexp.MustCompile(`^[A-Za-z][\w_\/]*$`)
+var ResourceNameLegalCharsPattern = regexp.MustCompile(`^[A-Za-z][\w_/]*$`)
 
 var BaseResourceNameLegalCharsPattern = regexp.MustCompile(`"[A-Za-z][\w_]*$`)
 
@@ -369,8 +369,7 @@ func NewMsgSpec(fields []Field, constants []Constant, text string, fullName stri
 
 // Implements Stringer interface
 func (s *MsgSpec) String() string {
-	lines := []string{}
-
+	var lines []string
 	lines = append(lines, fmt.Sprintf("msg %s {", s.FullName))
 
 	for _, c := range s.Constants {
@@ -400,7 +399,7 @@ func (s *MsgSpec) ComputeMD5(msgContext *MsgContext) (string, error) {
 			if err != nil {
 				return "", err
 			}
-			// If no package name, it should be a messge in the current package
+			// If no package name, it should be a message in the current package
 			if len(pkgName) == 0 {
 				pkgName = thisPkgName
 			}
@@ -412,7 +411,7 @@ func (s *MsgSpec) ComputeMD5(msgContext *MsgContext) (string, error) {
 				}
 				buffer.WriteString(fmt.Sprintf("%v %v\n", subMD5, f.Name))
 			} else {
-				return "", fmt.Errorf("Message '%s' was not found", fullMsgName)
+				return "", fmt.Errorf("message '%s' was not found", fullMsgName)
 			}
 		}
 	}

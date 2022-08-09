@@ -86,10 +86,10 @@ func convertConstantValue(fieldType string, valueLiteral string) (interface{}, e
 		} else if val, e := strconv.ParseUint(valueLiteral, 10, 0); e == nil {
 			return val != 0, nil
 		} else {
-			return nil, fmt.Errorf("Inavalid constant literal for bool: [%s]", valueLiteral)
+			return nil, fmt.Errorf("inavalid constant literal for bool: [%s]", valueLiteral)
 		}
 	default:
-		return nil, fmt.Errorf("Invalid constant type: [%s]", fieldType)
+		return nil, fmt.Errorf("invalid constant type: [%s]", fieldType)
 	}
 }
 
@@ -100,7 +100,7 @@ func packageResourceName(name string) (string, string, error) {
 		if len(components) == 2 {
 			return components[0], components[1], nil
 		} else {
-			return "", "", fmt.Errorf("Invalid name %s", name)
+			return "", "", fmt.Errorf("invalid name %s", name)
 		}
 	} else {
 		return "", name, nil
@@ -115,7 +115,7 @@ func loadConstantLine(line string) (*Constant, error) {
 	cleanLine := stripComment(line)
 	sepIndex := strings.IndexFunc(cleanLine, unicode.IsSpace)
 	if sepIndex < 0 {
-		return nil, fmt.Errorf("Could not find a constant name after the type name")
+		return nil, fmt.Errorf("could not find a constant name after the type name")
 	}
 
 	fieldType := cleanLine[:sepIndex]
@@ -128,7 +128,7 @@ func loadConstantLine(line string) (*Constant, error) {
 		// Strings contain anything to the right of the equal sign, no comments allowd.
 		sepIndex := strings.IndexFunc(line, unicode.IsSpace)
 		if sepIndex < 0 {
-			return nil, fmt.Errorf("Could not find a constant name after the type name")
+			return nil, fmt.Errorf("could not find a constant name after the type name")
 		}
 		keyValue := line[sepIndex:]
 		kvSplits := strings.SplitN(keyValue, "=", 2)
@@ -158,7 +158,7 @@ func loadFieldLine(line string, packageName string) (*Field, error) {
 	cleanLine := stripComment(line)
 	lineSplits := strings.SplitN(cleanLine, " ", 2)
 	if len(lineSplits) != 2 {
-		return nil, fmt.Errorf("Invalid declaration: %s", line)
+		return nil, fmt.Errorf("invalid declaration: %s", line)
 	}
 	fieldType := strings.TrimSpace(lineSplits[0])
 	name := strings.TrimSpace(lineSplits[1])

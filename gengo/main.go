@@ -8,8 +8,8 @@ import (
 	"strings"
 )
 
-func writeCode(fullname string, code string) error {
-	nameComponents := strings.Split(fullname, "/")
+func writeCode(fullName string, code string) error {
+	nameComponents := strings.Split(fullName, "/")
 	pkgDir := filepath.Join("vendor", nameComponents[0])
 	if _, err := os.Stat(pkgDir); os.IsNotExist(err) {
 		err = os.MkdirAll(pkgDir, os.ModeDir|os.FileMode(0775))
@@ -42,17 +42,17 @@ func main() {
 		os.Exit(-1)
 	}
 	mode := os.Args[1]
-	fullname := os.Args[2]
+	fullName := os.Args[2]
 
-	fmt.Printf("Generating %v...", fullname)
+	fmt.Printf("Generating %v...", fullName)
 
 	if mode == "msg" {
 		var spec *MsgSpec
 		var err error
 		if len(os.Args) == 3 {
-			spec, err = context.LoadMsg(fullname)
+			spec, err = context.LoadMsg(fullName)
 		} else {
-			spec, err = context.LoadMsgFromFile(os.Args[3], fullname)
+			spec, err = context.LoadMsgFromFile(os.Args[3], fullName)
 		}
 		if err != nil {
 			fmt.Println(err)
@@ -64,7 +64,7 @@ func main() {
 			fmt.Println(err)
 			os.Exit(-1)
 		}
-		err = writeCode(fullname, code)
+		err = writeCode(fullName, code)
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(-1)
@@ -73,9 +73,9 @@ func main() {
 		var spec *SrvSpec
 		var err error
 		if len(os.Args) == 3 {
-			spec, err = context.LoadSrv(fullname)
+			spec, err = context.LoadSrv(fullName)
 		} else {
-			spec, err = context.LoadSrvFromFile(os.Args[3], fullname)
+			spec, err = context.LoadSrvFromFile(os.Args[3], fullName)
 		}
 		if err != nil {
 			fmt.Println(err)
@@ -87,7 +87,7 @@ func main() {
 			os.Exit(-1)
 		}
 
-		err = writeCode(fullname, srvCode)
+		err = writeCode(fullName, srvCode)
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(-1)

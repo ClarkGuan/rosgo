@@ -309,7 +309,7 @@ func (gen *MsgGen) analyzeImports() {
 	}
 }
 
-func GenerateMessage(context *MsgContext, spec *MsgSpec) (string, error) {
+func GenerateMessage(_ *MsgContext, spec *MsgSpec) (string, error) {
 	var gen MsgGen
 	gen.Fields = spec.Fields
 	gen.Constants = spec.Constants
