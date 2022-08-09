@@ -45,9 +45,9 @@ func findAllMessages(rosPkgPaths []string) (map[string]string, error) {
 				}
 				for _, m := range msgPaths {
 					basename := filepath.Base(m)
-					rootname := basename[:len(basename)-4]
-					fullname := pkgName + "/" + rootname
-					msgs[fullname] = m
+					rootName := basename[:len(basename)-4]
+					fullName := pkgName + "/" + rootName
+					msgs[fullName] = m
 				}
 			}
 		}
@@ -76,9 +76,9 @@ func findAllServices(rosPkgPaths []string) (map[string]string, error) {
 				}
 				for _, m := range srvPaths {
 					basename := filepath.Base(m)
-					rootname := basename[:len(basename)-4]
-					fullname := pkgName + "/" + rootname
-					srvs[fullname] = m
+					rootName := basename[:len(basename)-4]
+					fullName := pkgName + "/" + rootName
+					srvs[fullName] = m
 				}
 			}
 		}
@@ -115,12 +115,12 @@ func NewMsgContext(rosPkgPaths []string) (*MsgContext, error) {
 	return ctx, nil
 }
 
-func (ctx *MsgContext) Register(fullname string, spec *MsgSpec) {
-	ctx.msgRegistry[fullname] = spec
+func (ctx *MsgContext) Register(fullName string, spec *MsgSpec) {
+	ctx.msgRegistry[fullName] = spec
 }
 
-func (ctx *MsgContext) LoadMsgFromString(text string, fullname string) (*MsgSpec, error) {
-	packageName, shortName, e := packageResourceName(fullname)
+func (ctx *MsgContext) LoadMsgFromString(text string, fullName string) (*MsgSpec, error) {
+	packageName, shortName, e := packageResourceName(fullName)
 	if e != nil {
 		return nil, e
 	}
@@ -135,80 +135,80 @@ func (ctx *MsgContext) LoadMsgFromString(text string, fullname string) (*MsgSpec
 		} else if strings.Contains(cleanLine, ConstChar) {
 			constant, e := loadConstantLine(origLine)
 			if e != nil {
-				return nil, NewSyntaxError(fullname, lineno, e.Error())
+				return nil, NewSyntaxError(fullName, lineno, e.Error())
 			}
 			constants = append(constants, *constant)
 		} else {
 			field, e := loadFieldLine(origLine, packageName)
 			if e != nil {
-				return nil, NewSyntaxError(fullname, lineno, e.Error())
+				return nil, NewSyntaxError(fullName, lineno, e.Error())
 			}
 			fields = append(fields, *field)
 		}
 	}
-	spec, _ := NewMsgSpec(fields, constants, text, fullname, OptionPackageName(packageName), OptionShortName(shortName))
+	spec, _ := NewMsgSpec(fields, constants, text, fullName, OptionPackageName(packageName), OptionShortName(shortName))
 	var err error
 	md5sum, err := ctx.ComputeMsgMD5(spec)
 	if err != nil {
 		return nil, err
 	}
 	spec.MD5Sum = md5sum
-	ctx.Register(fullname, spec)
+	ctx.Register(fullName, spec)
 	return spec, nil
 }
 
-func (ctx *MsgContext) LoadMsgFromFile(filePath string, fullname string) (*MsgSpec, error) {
-	bytes, e := ioutil.ReadFile(filePath)
+func (ctx *MsgContext) LoadMsgFromFile(filePath string, fullName string) (*MsgSpec, error) {
+	bs, e := ioutil.ReadFile(filePath)
 	if e != nil {
 		return nil, e
 	}
-	text := string(bytes)
-	return ctx.LoadMsgFromString(text, fullname)
+	text := string(bs)
+	return ctx.LoadMsgFromString(text, fullName)
 }
 
-func (ctx *MsgContext) LoadMsg(fullname string) (*MsgSpec, error) {
-	if spec, ok := ctx.msgRegistry[fullname]; ok {
+func (ctx *MsgContext) LoadMsg(fullName string) (*MsgSpec, error) {
+	if spec, ok := ctx.msgRegistry[fullName]; ok {
 		return spec, nil
 	} else {
-		if path, ok := ctx.msgPathMap[fullname]; ok {
-			spec, err := ctx.LoadMsgFromFile(path, fullname)
+		if path, ok := ctx.msgPathMap[fullName]; ok {
+			spec, err := ctx.LoadMsgFromFile(path, fullName)
 			if err != nil {
 				return nil, err
 			} else {
-				ctx.msgRegistry[fullname] = spec
+				ctx.msgRegistry[fullName] = spec
 				return spec, nil
 			}
 		} else {
-			return nil, fmt.Errorf("Message definition of `%s` is not found", fullname)
+			return nil, fmt.Errorf("message definition of `%s` is not found", fullName)
 		}
 	}
 }
 
-func (ctx *MsgContext) LoadSrvFromString(text string, fullname string) (*SrvSpec, error) {
-	packageName, shortName, err := packageResourceName(fullname)
+func (ctx *MsgContext) LoadSrvFromString(text string, fullName string) (*SrvSpec, error) {
+	packageName, shortName, err := packageResourceName(fullName)
 	if err != nil {
 		return nil, err
 	}
 
 	components := strings.Split(text, "---")
 	if len(components) != 2 {
-		return nil, fmt.Errorf("Syntax error: missing '---'")
+		return nil, fmt.Errorf("syntax error: missing '---'")
 	}
 
 	reqText := components[0]
 	resText := components[1]
 
-	reqSpec, err := ctx.LoadMsgFromString(reqText, fullname+"Request")
+	reqSpec, err := ctx.LoadMsgFromString(reqText, fullName+"Request")
 	if err != nil {
 		return nil, err
 	}
-	resSpec, err := ctx.LoadMsgFromString(resText, fullname+"Response")
+	resSpec, err := ctx.LoadMsgFromString(resText, fullName+"Response")
 	if err != nil {
 		return nil, err
 	}
 
 	spec := &SrvSpec{
-		packageName, shortName, fullname, text, "", reqSpec, resSpec,
+		packageName, shortName, fullName, text, "", reqSpec, resSpec,
 	}
 	md5sum, err := ctx.ComputeSrvMD5(spec)
 	if err != nil {
@@ -219,25 +219,25 @@ func (ctx *MsgContext) LoadSrvFromString(text string, fullname string) (*SrvSpec
 	return spec, nil
 }
 
-func (ctx *MsgContext) LoadSrvFromFile(filePath string, fullname string) (*SrvSpec, error) {
-	bytes, e := ioutil.ReadFile(filePath)
+func (ctx *MsgContext) LoadSrvFromFile(filePath string, fullName string) (*SrvSpec, error) {
+	bs, e := ioutil.ReadFile(filePath)
 	if e != nil {
 		return nil, e
 	}
-	text := string(bytes)
-	return ctx.LoadSrvFromString(text, fullname)
+	text := string(bs)
+	return ctx.LoadSrvFromString(text, fullName)
 }
 
-func (ctx *MsgContext) LoadSrv(fullname string) (*SrvSpec, error) {
-	if path, ok := ctx.srvPathMap[fullname]; ok {
-		spec, err := ctx.LoadSrvFromFile(path, fullname)
+func (ctx *MsgContext) LoadSrv(fullName string) (*SrvSpec, error) {
+	if path, ok := ctx.srvPathMap[fullName]; ok {
+		spec, err := ctx.LoadSrvFromFile(path, fullName)
 		if err != nil {
 			return nil, err
 		} else {
 			return spec, nil
 		}
 	} else {
-		return nil, fmt.Errorf("Service definition of `%s` is not found", fullname)
+		return nil, fmt.Errorf("service definition of `%s` is not found", fullName)
 	}
 }
 
